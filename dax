@@ -1,9 +1,6 @@
--- ####################################################################
 -- # Global Superstore Sales Dashboard: Analytical DAX Queries
 -- # Data Table Name: Sheet1
--- ####################################################################
-
--- 1. Total Revenue Measure (Note: Measures are usually stored in the model, not a query file)
+-- 1. Total Revenue Measure 
 -- Total Revenue = SUM( Sheet1[Sales] )
 
 -- 2. Total Profit Measure
