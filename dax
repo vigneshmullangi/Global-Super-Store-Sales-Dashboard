@@ -1,3 +1,78 @@
-EVALUATE
-Sheet1
+-- ####################################################################
+-- # Global Superstore Sales Dashboard: Analytical DAX Queries
+-- # Data Table Name: Sheet1
+-- ####################################################################
 
+-- 1. Total Revenue Measure (Note: Measures are usually stored in the model, not a query file)
+-- Total Revenue = SUM( Sheet1[Sales] )
+
+-- 2. Total Profit Measure
+-- Total Profit = SUM( Sheet1[Profit] )
+
+-- 3. Sales by Year (Rounded)
+EVALUATE
+SUMMARIZE(
+    Sheet1,
+    Sheet1[Year],
+    "Total Sales ($)", ROUND(SUM(Sheet1[Sales])/100000,0)
+)
+ORDER BY [Total Sales ($)]
+
+-- 4. Top 5 Countries by Sales
+EVALUATE
+TOPN(
+    5,
+    SUMMARIZE(Sheet1, Sheet1[Country], "Total Sales", SUM(Sheet1[Sales])),
+    [Total Sales]
+)
+ORDER BY [Total Sales] DESC
+
+-- 5. Sales & Profit by Region
+EVALUATE
+SUMMARIZE(Sheet1, Sheet1[Region], "Total sales", SUM(Sheet1[Sales]), "Total profit", SUM(Sheet1[Profit]))
+ORDER BY [Total sales] DESC
+
+-- 6. Top 10 Most Profitable Products
+EVALUATE
+TOPN(
+    10,
+    SUMMARIZE(
+        Sheet1,
+        Sheet1[Product Name],
+        "Total Profit", SUM(Sheet1[Profit])
+    ),
+    [Total Profit],
+    DESC
+)
+
+-- 7. High Discount Transactions Filter
+EVALUATE
+FILTER(
+    Sheet1,
+    Sheet1[Discount] > 0.5
+)
+
+-- 8. Transaction-Level Profit Margin (Used with ADDCOLUMNS)
+EVALUATE
+ADDCOLUMNS(
+    Sheet1,
+    "Profit Margin %", DIVIDE(Sheet1[Profit], Sheet1[Sales], 0) * 100
+)
+
+-- 9. Average Sales by Category
+EVALUATE
+SUMMARIZE(
+    Sheet1,
+    Sheet1[Category],
+    "Avg Sales", AVERAGE(Sheet1[Sales])
+)
+ORDER BY [Avg Sales] DESC
+
+-- 10. Total Orders by Ship Mode
+EVALUATE
+SUMMARIZE(
+    Sheet1,
+    Sheet1[Ship Mode],
+    "Total Orders", DISTINCTCOUNT(Sheet1[Order ID])
+)
+ORDER BY [Total Orders] DESC
